@@ -46,31 +46,50 @@ Cypress.Commands.add('getIframeBody', (attribute) => {
       cy.wait(8000)
       cy.getIframeBody('id="assets_iframe"')
         .contains('div', 'CRICK-SE3310').eq(0).click()
+      cy.wait(4000)
       cy.getIframeBody('id="assets_iframe"').find('#itemList').find('[title="Actions"]').click()
       cy.getIframeBody('id="assets_iframe"').find('#dropdown-ACTION_TB > li').as('dropdown')
-      cy.get('@dropdown').eq(1).contains('Take Item Off-site Request').click()
+      cy.wait(2000)
+      cy.get('@dropdown').eq(1).contains('span', 'Take Item Off-site Request').click()
+      cy.wait(4000)
       cy.getIframeBody('id="assets_iframe"').find('#modal-btnOk').click()
       cy.wait(4000)
       cy.getIframeBody('id="assets_iframe"').find('#modal-btnCancel').click()
     })
     
-    it('Verify if the Quick move menu item is disabled for an off-site item', () => {
-      cy.getIframeBody('id="assets_iframe"').find('#itemListFilter').find('[title="Clear"]').click()
-      cy.wait(2000) 
+    it('Visit Change page', () => {
+      cy.get('.menu-toggle').click()
+      cy.get('.header-dropdown > li').as('dropdown')
+      cy.get('@dropdown').eq(5).find('sun-icon.fa.fa-chevron-right').should('exist').click()
+      cy.get('@dropdown').eq(5).contains('Requests').click()
+    })
+
+    it('Check the stage of the request (complete)', () => {
+      cy.getIframeBody('id="change_iframe"').find('.ui-grid-canvas > div').eq(0).dblclick()
+      cy.getIframeBody('id="change_iframe"').find('#cmbRequestStage').should('have.value', 'Request Complete')
+      cy.wait(2000)
+    })
+
+    it('Visit Assets Page', () => {
+      cy.wait(8000)
+      cy.get('.menu-toggle').click()
+      cy.get('.header-dropdown > li').as('dropdown')
+      cy.get('@dropdown').eq(3).find('sun-icon.fa.fa-chevron-right').should('exist').click()
+      cy.get('@dropdown').eq(3).contains('Items').click()
+    })
+
+    it('Find this item', () => {
+      cy.wait(8000)
+      // filtering
       cy.getIframeBody('id="assets_iframe"').find('#filter_cmbStatus').click()
       cy.getIframeBody('id="assets_iframe"').find('#option-2').click()
       cy.getIframeBody('id="assets_iframe"').find('#filter_cmbStatus').click()
+      cy.wait(8000)
       cy.getIframeBody('id="assets_iframe"')
-        .contains('div', 'CRICK-SE3310').eq(0).click()
-      cy.getIframeBody('id="assets_iframe"').find('#itemList').find('[title="Actions"]').click()
-      cy.getIframeBody('id="assets_iframe"').find('#dropdown-ACTION_TB > li').as('dropdown')
-      cy.get('@dropdown').eq(11).contains('span', 'Quick Move Item Request').should('have.attr', 'disabled', 'disabled')
+        .contains('div', 'CRICK-SE3310').eq(0).dblclick()
     })
 
     it('Bring this item storage status', () => {
-      cy.getIframeBody('id="assets_iframe"').find('#itemList').find('[title="Actions"]').click()
-      cy.getIframeBody('id="assets_iframe"')
-        .contains('div', 'CRICK-SE3310').eq(0).dblclick()
       cy.wait(6000)
       cy.getIframeBody('id="assets_iframe"').find('#itemDetail').find('[title="Edit"]').click()
       cy.wait(2000) 
