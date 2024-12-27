@@ -96,7 +96,7 @@ describe("dcTrack front-end testing ", () => {
     cy.get("@dropdown").eq(8).contains("Models Library").click();
   });
 
-  it("Select 0000000111111 again, verify and rollback", () => {
+  it("Select 0000000111111 again and verify", () => {
     cy.wait(4000);
     cy.getIframeBody('id="models_iframe"')
       .find("#modeldetail")
@@ -115,24 +115,6 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="models_iframe"')
       .find("#tiWeight")
       .should("have.value", "0.79");
-    // rollback
-    cy.getIframeBody('id="models_iframe"')
-      .find("#tiDimWidth")
-      .clear()
-      .type("0{enter}");
-    cy.getIframeBody('id="models_iframe"')
-      .find("#tiDimDepth")
-      .clear()
-      .type("0{enter}");
-    cy.getIframeBody('id="models_iframe"')
-      .find("#tiWeight")
-      .clear()
-      .type("0{enter}");
-    cy.getIframeBody('id="models_iframe"')
-      .find("#modeldetail")
-      .find('[title="Save"]')
-      .click();
-    cy.wait(10000);
   });
 
   it("Rollback the unit system", () => {
@@ -145,5 +127,49 @@ describe("dcTrack front-end testing ", () => {
     cy.get("#user-profile-container").contains("span", " U.S. ").click();
     cy.wait(2000);
     cy.get("#user-profile-container").contains("button", "Save").click();
+  });
+
+  it("Visit Models Library Page again", () => {
+    cy.wait(4000);
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(8)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(8).contains("Models Library").click();
+  });
+
+  it("Verify it is in the US unit and rollback", () => {
+    cy.wait(4000);
+    cy.getIframeBody('id="models_iframe"')
+      .find("#modeldetail")
+      .find('[title="Refresh Model"]')
+      .click();
+    cy.wait(4000);
+    cy.getIframeBody('id="models_iframe"')
+      .find("#tiDimWidth")
+      .should("have.value", "1.75")
+      .clear()
+      .type("0{enter}");
+    cy.getIframeBody('id="models_iframe"')
+      .find("#tiDimHeight")
+      .should("have.value", "1.75");
+    cy.getIframeBody('id="models_iframe"')
+      .find("#tiDimDepth")
+      .should("have.value", "1.75")
+      .clear()
+      .type("0{enter}");
+    cy.getIframeBody('id="models_iframe"')
+      .find("#tiWeight")
+      .should("have.value", "1.75")
+      .clear()
+      .type("0{enter}");
+    cy.getIframeBody('id="models_iframe"')
+      .find("#modeldetail")
+      .find('[title="Save"]')
+      .click();
+    cy.wait(10000);
   });
 });

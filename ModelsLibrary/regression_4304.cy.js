@@ -21,6 +21,7 @@ describe("dcTrack front-end testing ", () => {
   it("Visit page", () => {
     cy.visit("192.168.56.104");
   });
+
   it("log in", () => {
     cy.on("fail", (err, runnable) => {
       cy.log("already log in");
@@ -33,7 +34,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit Models Library Page", () => {
-    cy.wait(8000);
+    cy.wait(4000);
     cy.get(".menu-toggle").click();
     cy.get(".header-dropdown > li").as("dropdown");
     cy.get("@dropdown")
@@ -44,34 +45,37 @@ describe("dcTrack front-end testing ", () => {
     cy.get("@dropdown").eq(8).contains("Models Library").click();
   });
 
-  it("Filter RPDU and choose a item with power ports more than 30", () => {
+  it("Clone 10508 Switch (Chassis JC612A)", () => {
     cy.wait(4000);
     cy.getIframeBody('id="models_iframe"')
-      .find("#filter_class")
+      .find("#filter_subclass")
       .find("button")
       .click();
-    cy.getIframeBody('id="models_iframe"').find("#option-14").click();
+    cy.getIframeBody('id="models_iframe"').find("#option-25").click();
     cy.getIframeBody('id="models_iframe"')
-      .find("#filter_class")
+      .find("#filter_subclass")
       .find("button")
       .click();
-    cy.wait(2000);
+
     cy.getIframeBody('id="models_iframe"')
-      .contains("div", "009-8005-0420")
-      .dblclick();
+      .contains("div", "10508 Switch (Chassis JC612A)")
+      .click();
+    cy.getIframeBody('id="models_iframe"')
+      .find("#modellist")
+      .find('[title="Clone selected model"]')
+      .click();
   });
 
-  it("Verify the scrollbar", () => {
+  it("Verify if the slots are cloned", () => {
     cy.wait(4000);
     cy.getIframeBody('id="models_iframe"')
-      .find("#subtab-PowerPorts")
+      .find("#subtab-SlotSetup")
       .parent()
       .click();
     cy.wait(2000);
     cy.getIframeBody('id="models_iframe"')
-      .find("#powerPortsGrid")
-      .find(".ui-grid-viewport")
-      .eq(1)
-      .should("have.attr", "style", "overflow: auto scroll;");
+      .find("#slotGrid")
+      .find(".ui-grid-canvas > div")
+      .should("have.length", 10);
   });
 });
