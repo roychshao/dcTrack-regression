@@ -34,7 +34,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit Models Library Page", () => {
-    cy.wait(12000);
+    cy.wait(4000);
     cy.get(".menu-toggle").click();
     cy.get(".header-dropdown > li").as("dropdown");
     cy.get("@dropdown")
@@ -45,44 +45,25 @@ describe("dcTrack front-end testing ", () => {
     cy.get("@dropdown").eq(8).contains("Models Library").click();
   });
 
-  it("Clone 00YJ783 and remove its data port", () => {
-    cy.wait(8000);
-    cy.getIframeBody('id="models_iframe"').contains("div", "00YJ783").click();
-    cy.wait(4000);
+  it("Clone 0000000111111", () => {
+    cy.wait(6000);
+    cy.getIframeBody('id="models_iframe"')
+      .contains("div", "0000000111111")
+      .click();
     cy.getIframeBody('id="models_iframe"')
       .find("#modellist")
       .find('[title="Clone selected model"]')
       .click();
-    cy.wait(14000);
-    cy.getIframeBody('id="models_iframe"').find("#subtab-DataPorts").click();
-    cy.wait(2000);
-    cy.getIframeBody('id="models_iframe"')
-      .find("#dataPortsGrid")
-      .find(".ui-grid-canvas")
-      .eq(1)
-      .find('[role="checkbox"]')
-      .click();
-    cy.getIframeBody('id="models_iframe"').find("#btnDelete").click();
-    cy.wait(1000);
-    cy.getIframeBody('id="models_iframe"')
-      .find("#modeldetail")
-      .find('[title="Save"]')
-      .click();
-    cy.wait(4000);
+    cy.wait(6000);
   });
 
-  it("Verify result and remove this clone", () => {
-    cy.wait(8000);
+  it("Verify the new model name and part number", () => {
+    cy.wait(4000);
     cy.getIframeBody('id="models_iframe"')
-      .find("#dataPortsGrid")
-      .find(".ui-grid-canvas")
-      .eq(2)
-      .find('[role="checkbox"]')
-      .should("not.exist");
+      .find("#cmbModel")
+      .should("have.value", "0000000111111");
     cy.getIframeBody('id="models_iframe"')
-      .find("#modeldetail")
-      .find('[title="Delete"]')
-      .click();
-    cy.getIframeBody('id="models_iframe"').find("#modal-btnOk").click();
+      .find("#tiPartNumber")
+      .should("not.have.value", "");
   });
 });
