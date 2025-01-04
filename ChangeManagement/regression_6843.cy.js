@@ -159,7 +159,7 @@ describe("dcTrack front-end testing ", () => {
       .dblclick();
   });
 
-  it("TEMP issue decommission to storage", () => {
+  it("TEMP issue decommission to archive", () => {
     cy.wait(6000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
@@ -178,8 +178,8 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
       .find("#dropdown-ACTION_TB > li")
-      .eq(5)
-      .contains("Decommission Item to Storage Request")
+      .eq(6)
+      .contains("Decommission Item to Archive Request")
       .click();
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
   });
@@ -191,7 +191,7 @@ describe("dcTrack front-end testing ", () => {
       .should(($t) => {
         const value = $t.val();
         expect(value).to.include(
-          "Decommission to Storage: TEMP. Item TEMP cannot be Storage because at least one Device / Standard is not in the Storage status and is not included in this work order.",
+          "Decommission to Archive: TEMP. Item TEMP cannot be Archived because at least one Device / Standard is not in the Archived status and is not included in this work order.",
         );
       });
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnCancel").click();
@@ -256,13 +256,13 @@ describe("dcTrack front-end testing ", () => {
       .click();
   });
 
-  it("Toggle to Storage status directly", () => {
+  it("Toggle to Archive status directly", () => {
     cy.wait(8000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbStatus-selectized")
       .parent()
       .click();
-    cy.getIframeBody('id="assets_iframe"').find('[data-value="5088"]').click();
+    cy.getIframeBody('id="assets_iframe"').find('[data-value="5085"]').click();
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
       .find('[title="Save"]')
@@ -285,7 +285,7 @@ describe("dcTrack front-end testing ", () => {
       .dblclick();
   });
 
-  it("TEMP issue decommission to storage again", () => {
+  it("TEMP issue decommission to archive again", () => {
     cy.wait(6000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
@@ -294,8 +294,8 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
       .find("#dropdown-ACTION_TB > li")
-      .eq(5)
-      .contains("Decommission Item to Storage Request")
+      .eq(6)
+      .contains("Decommission Item to Archive Request")
       .click();
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
   });
