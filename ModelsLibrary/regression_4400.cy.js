@@ -19,7 +19,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit page", () => {
-    cy.visit("192.168.56.104");
+    cy.visit("192.168.56.105");
   });
 
   it("log in", () => {
@@ -71,9 +71,9 @@ describe("dcTrack front-end testing ", () => {
       .click();
   });
 
-  it("Select 00YJ783", () => {
+  it("Select 00YJ776 ATZY", () => {
     cy.getIframeBody('id="models_iframe"')
-      .contains("div", "00YJ783")
+      .contains("div", "00YJ776 ATZY")
       .dblclick();
   });
 
@@ -85,13 +85,7 @@ describe("dcTrack front-end testing ", () => {
       .click();
     cy.getIframeBody('id="models_iframe"')
       .find("#powerPortsGrid")
-      .find(".ui-grid-canvas")
-      .eq(3)
-      .children()
-      .eq(1)
-      .find('[role="row"] > div')
-      .eq(7)
-      .find("div")
-      .should("have.length", 0);
+      .contains("span", "Phase Legs")
+      .should("not.exist");
   });
 });

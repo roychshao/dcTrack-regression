@@ -21,7 +21,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit page", () => {
-    cy.visit("192.168.56.104");
+    cy.visit("192.168.56.105");
   });
   it("log in", () => {
     cy.on("fail", (err, runnable) => {

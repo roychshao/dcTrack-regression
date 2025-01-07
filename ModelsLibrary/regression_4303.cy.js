@@ -13,7 +13,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
   );
 });
 
-const host = "http://192.168.56.104";
+const host = "http://192.168.56.105";
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
@@ -74,11 +74,11 @@ describe("dcTrack front-end testing ", () => {
       .find("#image-front")
       .invoke("attr", "back-img")
       .then((path1) => {
-        const url1 = "http://192.168.56.104" + path1;
+        const url1 = "http://192.168.56.105" + path1;
         cy.request(url1).then((res1) => {
           const imgBuffer1 = res1.body;
           const url2 =
-            "http://192.168.56.104/images/devices/frontpngimages/30817_F.png";
+            "http://192.168.56.105/images/devices/frontpngimages/30817_F.png";
           cy.request(url2).then((res2) => {
             const imgBuffer2 = res2.body;
             expect(imgBuffer1).to.deep.equal(imgBuffer2);

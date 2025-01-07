@@ -50,62 +50,62 @@ describe("dcTrack front-end testing ", () => {
 
     // if version has been 3.172, jump to next
     cy.getIframeBody('id="models_iframe"')
-      .find("#modedllist")
+      .find("#modellist")
       .contains("label", "Last update version: 3.172")
       .then((label) => {
         if (label) {
           return;
+        } else {
+          cy.getIframeBody('id="models_iframe"')
+            .find("#modellist")
+            .find('[title="Actions"]')
+            .click();
+          cy.getIframeBody('id="models_iframe"')
+            .find("#dropdown-MODEL_ACTIONS > li")
+            .eq(0)
+            .find("a")
+            .click();
+          cy.getIframeBody('id="models_iframe"').find("#btnUpload").click();
         }
       });
-
-    cy.getIframeBody('id="models_iframe"')
-      .find("#modellist")
-      .find('[title="Actions"]')
-      .click();
-    cy.getIframeBody('id="models_iframe"')
-      .find("#dropdown-MODEL_ACTIONS > li")
-      .eq(0)
-      .find("a")
-      .click();
-    cy.getIframeBody('id="models_iframe"').find("#btnUpload").click();
   });
 
   it("Upload file", () => {
     // if version has been 3.172, jump to next
     cy.getIframeBody('id="models_iframe"')
-      .find("#modedllist")
+      .find("#modellist")
       .contains("label", "Last update version: 3.172")
       .then((label) => {
         if (label) {
           return;
+        } else {
+          const file =
+            "/mnt/c/Users/roych/OneDrive/Desktop/Sunbird-RegressionTest/3_172/3.172/dcTrack_Library_3.172.mlu";
+          cy.getIframeBody('id="models_iframe"')
+            .find('[uploader="vm.uploader"]')
+            .eq(0)
+            .find('input[type="file"][id="raritan-file-input"]')
+            .selectFile(file, { force: true });
+          cy.wait(65000);
+          cy.getIframeBody('id="models_iframe"')
+            .find('[ui-view="modellibview"]')
+            .find("textarea")
+            .should(
+              "have.value",
+              "Models Library Staging is successful without any errors or warnings. You may now proceed to the next step.",
+            );
+          for (let i = 0; i < 8; ++i) {
+            cy.getIframeBody('id="models_iframe"').find("#btnNext").click();
+            cy.wait(2000);
+          }
+          cy.getIframeBody('id="models_iframe"').find("#btnLibUpdate").click();
+          cy.wait(200000);
+          cy.getIframeBody('id="models_iframe"').find("#btnRemoveTab").click();
         }
       });
-
-    const file =
-      "/mnt/c/Users/roych/OneDrive/Desktop/Sunbird-RegressionTest/3_172/3.172/dcTrack_Library_3.172.mlu";
-    cy.getIframeBody('id="models_iframe"')
-      .find('[uploader="vm.uploader"]')
-      .eq(0)
-      .find('input[type="file"][id="raritan-file-input"]')
-      .selectFile(file, { force: true });
-    cy.wait(65000);
-    cy.getIframeBody('id="models_iframe"')
-      .find('[ui-view="modellibview"]')
-      .find("textarea")
-      .should(
-        "have.value",
-        "Models Library Staging is successful without any errors or warnings. You may now proceed to the next step.",
-      );
-    for (let i = 0; i < 8; ++i) {
-      cy.getIframeBody('id="models_iframe"').find("#btnNext").click();
-      cy.wait(2000);
-    }
-    cy.getIframeBody('id="models_iframe"').find("#btnLibUpdate").click();
-    cy.wait(200000);
   });
 
   it("Verify the submenu of Export", () => {
-    cy.getIframeBody('id="models_iframe"').find("#btnRemoveTab").click();
     cy.getIframeBody('id="models_iframe"')
       .find("#modellist")
       .find('[title="Export"]')

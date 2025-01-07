@@ -13,7 +13,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
   );
 });
 
-const host = "http://192.168.56.104";
+const host = "http://192.168.56.105";
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {

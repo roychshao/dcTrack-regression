@@ -16,7 +16,7 @@
 //     })
 //
 //     it('Visit page', () => {
-//       cy.visit('192.168.56.103')
+//       cy.visit('192.168.56.105')
 //     })
 //     it('log in', () => {
 //       cy.on('fail', (err, runnable) => {
@@ -63,7 +63,7 @@
 //
 //     it('Open tab2 and verify the two request is complete', () => {
 //       cy.window().then((win) => {
-//         const secondTab = win.open('http://192.168.56.103', '_blank')
+//         const secondTab = win.open('http://192.168.56.105', '_blank')
 //         cy.wrap(secondTab).then(() => {
 //           cy.window().then((win2) => {
 //             // Turn to request page
