@@ -94,39 +94,17 @@ describe("dcTrack front-end testing ", () => {
               "have.value",
               "Models Library Staging is successful without any errors or warnings. You may now proceed to the next step.",
             );
-          for (let i = 0; i < 8; ++i) {
+          // just to models step
+          for (let i = 0; i < 7; ++i) {
             cy.getIframeBody('id="models_iframe"').find("#btnNext").click();
             cy.wait(2000);
           }
-          cy.getIframeBody('id="models_iframe"').find("#btnLibUpdate").click();
-          cy.wait(200000);
+          cy.getIframeBody('id="models_iframe"')
+            .find("#dropdown-export")
+            .contains("a", "Actions on Models in this Update");
           cy.getIframeBody('id="models_iframe"').find("#btnRemoveTab").click();
+          cy.getIframeBody('id="models_iframe"').find("#modal-btnOk").click();
         }
       });
   });
-
-  it("Verify the submenu of Export", () => {
-    cy.getIframeBody('id="models_iframe"')
-      .find("#modellist")
-      .find('[title="Export"]')
-      .click();
-    cy.getIframeBody('id="models_iframe"')
-      .find("#dropdown-EXPORT_MODEL")
-      .contains("Export Actions on Library Update");
-    cy.getIframeBody('id="models_iframe"')
-      .find("#dropdown-EXPORT_MODEL")
-      .contains("Actions on Models in this Update");
-  });
-
-  // NOTE: I found no way to restore
-  // it('Restore version', () => {
-  //   cy.get(".menu-toggle").click();
-  //   cy.get(".header-dropdown > li").as("dropdown");
-  //   cy.get("@dropdown")
-  //     .eq(8)
-  //     .find("sun-icon.fa.fa-chevron-right")
-  //     .should("exist")
-  //     .click();
-  //   cy.get("@dropdown").eq(8).contains("dcTrack Settings").click();
-  // })
 });

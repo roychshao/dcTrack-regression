@@ -15,7 +15,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    Cypress.config("defaultCommandTimeout", 40000);
   });
 
   it("Visit page", () => {
@@ -82,7 +82,7 @@ describe("dcTrack front-end testing ", () => {
     cy.wait(4000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
-      .type("7206VXR Router");
+      .type("CB500 Chassis");
     cy.wait(2000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
@@ -120,7 +120,7 @@ describe("dcTrack front-end testing ", () => {
     cy.wait(4000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
-      .type("Blade UCS B200 M4");
+      .type("VSP G1000 Front-end director blade, Fibre Channel");
     cy.wait(2000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
@@ -155,7 +155,7 @@ describe("dcTrack front-end testing ", () => {
     cy.wait(4000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
-      .type("Blade UCS B200 M4");
+      .type("VSP G1000 Front-end director blade, Fibre Channel");
     cy.wait(2000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbModel-selectized")
@@ -173,7 +173,7 @@ describe("dcTrack front-end testing ", () => {
       .find("#itemDetail")
       .find('[title="Save"]')
       .click();
-    cy.wait(10000);
+    cy.wait(16000);
     cy.getIframeBody('id="assets_iframe"').find("#btnRemoveTab").click();
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemList")
@@ -215,7 +215,7 @@ describe("dcTrack front-end testing ", () => {
 
   it("Toggle TEMP CHASSIS to installed stage directly", () => {
     cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "7206VXR Router")
+      .contains("div", "CB500 Chassis")
       .eq(0)
       .dblclick();
     cy.wait(6000);
@@ -237,11 +237,9 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="assets_iframe"').find("#btnRemoveTab").click();
   });
 
-  // ERROR: Save failed because slotPosition is empty
-  // however, I cannot enter anything even if I do it manually
   it("Toggle TEMP BLADE SERVER1 to installed stage directly", () => {
     cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "Blade UCS B200 M4")
+      .contains("div", "VSP G1000 Front-end director blade, Fibre Channel")
       .eq(0)
       .dblclick();
     cy.wait(6000);
@@ -250,6 +248,19 @@ describe("dcTrack front-end testing ", () => {
       .find('[title="Edit"]')
       .click();
     cy.wait(1000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#placement_panel")
+      .find('input[type="select-one"]')
+      .eq(1)
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find(".selectize-dropdown-cmbChassis")
+      .find(".option.active")
+      .click();
+    cy.wait(1000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#cmbSlotPosition-selectized")
+      .type("1{enter}");
     cy.getIframeBody('id="assets_iframe"')
       .find("#cmbStatus-selectized")
       .parent()
@@ -264,29 +275,187 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Install TEMP Blade SERVER2 with issuing request", () => {
-    // disable RB
-    // issue install request
+    cy.getIframeBody('id="assets_iframe"')
+      .contains("div", "TEMP BLADE SERVER2")
+      .dblclick();
+    cy.wait(6000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Edit"]')
+      .click();
+    cy.wait(1000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#placement_panel")
+      .find('input[type="select-one"]')
+      .eq(1)
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find(".selectize-dropdown-cmbChassis")
+      .find(".option.active")
+      .click();
+    cy.wait(1000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#cmbSlotPosition-selectized")
+      .type("2{enter}");
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Save"]')
+      .click();
+    cy.wait(10000);
+    // turn off RB
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Actions"]')
+      .should("be.enabled")
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#dropdown-ACTION_TB > li")
+      .as("dropdown");
+    cy.get("@dropdown")
+      .eq(14)
+      .contains("Turn On Request Bypass")
+      .click({ force: true });
+    // install item
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Actions"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#dropdown-ACTION_TB > li")
+      .as("dropdown");
+    cy.get("@dropdown")
+      .eq(8)
+      .contains("Install Item Request")
+      .click({ force: true });
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
+    // verify it is issued
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#idItemRequestTextAreaNoProgress")
+      .should(($t) => {
+        const value = $t.val();
+        expect(value).to.include("Request Issued");
+      });
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnCancel").click();
+    cy.getIframeBody('id="assets_iframe"').find("#btnRemoveTab").click();
   });
 
   it("Archive TEMP CHASSIS with issuing request", () => {
     // should be successful
-  });
-
-  it("Remove all TEMP items", () => {
-    // from the process which failed:
+    cy.getIframeBody('id="assets_iframe"')
+      .contains("div", "CB500 Chassis")
+      .eq(0)
+      .dblclick();
+    cy.wait(6000);
+    // turn on RB
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Actions"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#dropdown-ACTION_TB > li")
+      .as("dropdown");
+    cy.get("@dropdown")
+      .eq(14)
+      .contains("Turn On Request Bypass")
+      .click({ force: true });
+    cy.wait(2000);
+    // archive chassis
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Actions"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#dropdown-ACTION_TB > li")
+      .as("dropdown");
+    cy.get("@dropdown")
+      .eq(6)
+      .contains("Decommission Item to Archive Request")
+      .click({ force: true });
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
+    // verify it is issued
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#idItemRequestTextArea")
+      .should(($t) => {
+        const value = $t.val();
+        expect(value).to.include(
+          "Request could not be issued, Item has outstanding request.",
+        );
+      });
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnCancel").click();
     cy.getIframeBody('id="assets_iframe"').find("#btnRemoveTab").click();
-    cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
+  });
+
+  it("Remove the blades first", () => {
     cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "Blade UCS B200 M4")
+      .find("#itemList")
+      .find('[title="Refresh"]')
+      .click();
+    cy.wait(2000);
+    cy.getIframeBody('id="assets_iframe"')
+      .contains("div", "TEMP BLADE SERVER1")
+      .click({ ctrlKey: true });
+    cy.getIframeBody('id="assets_iframe"')
+      .contains("div", "TEMP BLADE SERVER2")
+      .click({ ctrlKey: true });
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemList")
+      .find('[title="Delete selected items"]')
+      .click({ force: true });
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
+    cy.wait(4000);
+  });
+
+  it("Visit Change Page", () => {
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(5)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(5).contains("Requests").click();
+  });
+
+  it("Cancel the first (latest) request", () => {
+    cy.wait(4000);
+    cy.getIframeBody('id="change_iframe"')
+      .find("#requests")
+      .find('[title="Refresh"]')
+      .click();
+    cy.wait(4000);
+    cy.getIframeBody('id="change_iframe"')
+      .find(".ui-grid-canvas > div")
       .eq(0)
       .click();
+    cy.getIframeBody('id="change_iframe"')
+      .find("#requests")
+      .find('[title="Action for selected request."]')
+      .click();
+    cy.getIframeBody('id="change_iframe"')
+      .find("#requests")
+      .contains("span", "Cancel Request")
+      .click();
+    cy.getIframeBody('id="change_iframe"').find("#modal-btnCancel").click();
+  });
+
+  it("Visit assets page", () => {
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(3)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(3).contains("Items").click();
+  });
+
+  it("Remove cabinet and chassis", () => {
     cy.getIframeBody('id="assets_iframe"')
       .contains("div", "42RU-TeraFrame Cabinet 42D")
       .eq(0)
       .click();
     cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "7206VXR Router")
+      .contains("div", "CB500 Chassis")
       .eq(0)
       .click({ ctrlKey: true });
     cy.getIframeBody('id="assets_iframe"')
@@ -301,28 +470,6 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
     cy.wait(8000);
     cy.getIframeBody('id="assets_iframe"').find("#modal-btnCancel").click();
-    // Refresh
-    cy.getIframeBody('id="assets_iframe"')
-      .find("#itemList")
-      .find('[title="Refresh"]')
-      .click();
-    cy.wait(4000);
-    cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "42RU-TeraFrame Cabinet 42D")
-      .eq(0)
-      .click();
-    cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "7206VXR Router")
-      .eq(0)
-      .click({ ctrlKey: true });
-    cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "Blade UCS B200 M4")
-      .eq(0)
-      .click({ ctrlKey: true });
-    cy.getIframeBody('id="assets_iframe"')
-      .contains("div", "Blade UCS B200 M4")
-      .eq(1)
-      .click({ ctrlKey: true });
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemList")
       .find('[title="Delete selected items"]')

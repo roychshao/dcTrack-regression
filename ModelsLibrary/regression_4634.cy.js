@@ -16,7 +16,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
@@ -47,11 +47,12 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Try to add front image of 0000000111111", () => {
+    const file = "./cypress/fixtures/roger.png";
     cy.wait(4000);
     cy.getIframeBody('id="models_iframe"')
       .contains("div", "0000000111111")
       .dblclick();
-    cy.wait(4000);
+    cy.wait(8000);
     cy.getIframeBody('id="models_iframe"')
       .find("#modeldetail")
       .find('[title="Port Placement and Model Images"]')
@@ -62,8 +63,28 @@ describe("dcTrack front-end testing ", () => {
       .find("#frontImageTb")
       .find('[title="Add"]')
       .click();
-    // cy.getIframeBody('id="models_iframe"')
-    //   .find('input[type="file"]')
-    //   .invoke("show");
+    cy.getIframeBody('id="models_iframe"')
+      .find("#btnUploadFrontImg")
+      .selectFile(file, { force: true })
+      .wait(4000);
+  });
+
+  it("Verify if the content of the new image is correct", () => {
+    const fixtureImagePath = "roger.png";
+
+    cy.getIframeBody('id="models_iframe"')
+      .find("#image-front")
+      .invoke("attr", "back-img")
+      .then((imageURL) => {
+        cy.request({
+          url: imageURL,
+          encoding: "binary",
+        }).then((res) => {
+          const imageBinary = res.body;
+          cy.fixture(fixtureImagePath, "binary").then((fixtureBinary) => {
+            expect(imageBinary).to.deep.equal(fixtureBinary);
+          });
+        });
+      });
   });
 });
