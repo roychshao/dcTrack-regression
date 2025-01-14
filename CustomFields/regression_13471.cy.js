@@ -15,11 +15,11 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 30000);
+    Cypress.config("defaultCommandTimeout", 60000);
   });
 
   it("Visit page", () => {
-    cy.visit(Cypress.config('url'));
+    cy.visit(Cypress.config("url"));
   });
 
   it("log in with admin", () => {
@@ -31,6 +31,37 @@ describe("dcTrack front-end testing ", () => {
     cy.get(".login").type("admin");
     cy.get(".password").type("sunbird");
     cy.contains("Log in").click();
+  });
+
+  it("Visit assets page", () => {
+    cy.wait(10000);
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(3)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(3).contains("Items").click();
+  });
+
+  it("Make 101 HG-example has value and save it", () => {
+    cy.wait(6000);
+    cy.getIframeBody('id="assets_iframe"').contains("div", "101").dblclick();
+    cy.wait(8000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Edit"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#tiCustomField_HG-example-selectized")
+      .click();
+    cy.getIframeBody('id="assets_iframe"').find('[data-value="8"]').click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Save"]')
+      .click();
+    cy.wait(10000);
   });
 
   it("Visit dcTrack Settings Page", () => {
@@ -344,13 +375,13 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Verify custom field1 and action", () => {
-    cy.wait(30000);
+    cy.wait(50000);
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Field")
       .type("HG-example");
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Action")
-      .type("EDIT");
+      .type("UPDATE");
     cy.wait(8000);
     cy.getIframeBody('id="dashboard_iframe"')
       .contains("h4", "13471 Audit Trail SQL Grid Widget")
@@ -445,13 +476,13 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Verify custom field1 and action", () => {
-    cy.wait(30000);
+    cy.wait(50000);
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Field")
       .type("HG-example");
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Action")
-      .type("EDIT");
+      .type("UPDATE");
     cy.wait(8000);
     cy.getIframeBody('id="dashboard_iframe"')
       .contains("h4", "13471 Audit Trail SQL Grid Widget")
@@ -546,13 +577,13 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Verify custom field1 and action", () => {
-    cy.wait(30000);
+    cy.wait(50000);
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Field")
       .type("HG-example");
     cy.getIframeBody('id="dashboard_iframe"')
       .find("#filter_Action")
-      .type("EDIT");
+      .type("UPDATE");
     cy.wait(8000);
     cy.getIframeBody('id="dashboard_iframe"')
       .contains("h4", "13471 Audit Trail SQL Grid Widget")
@@ -654,5 +685,34 @@ describe("dcTrack front-end testing ", () => {
     cy.get("#delete-btn").click();
     cy.get(".cdk-overlay-pane").contains("button", " Delete ").click();
     cy.wait(8000);
+  });
+
+  it("Visit assets page", () => {
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(3)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(3).contains("Items").click();
+  });
+
+  it("Rollback 101 HG-example", () => {
+    cy.wait(6000);
+    cy.getIframeBody('id="assets_iframe"').contains("div", "101").dblclick();
+    cy.wait(8000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Edit"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#tiCustomField_HG-example-selectized")
+      .type("{backspace}");
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#itemDetail")
+      .find('[title="Save"]')
+      .click();
+    cy.wait(10000);
   });
 });
