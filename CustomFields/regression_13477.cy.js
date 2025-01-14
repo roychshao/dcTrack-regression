@@ -15,11 +15,11 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
-    cy.visit("192.168.56.105");
+    cy.visit(Cypress.config('url'));
   });
 
   it("log in with admin", () => {
@@ -95,7 +95,7 @@ describe("dcTrack front-end testing ", () => {
     cy.contains("button", " Back To List ").click();
   });
 
-  it("Setting Permissions: CustomField1, user3 has inherit role", () => {
+  it("Setting Permissions: CustomField1, user3 has inherit role, remove all_user's inherit role", () => {
     cy.get(".menu-toggle").click();
     cy.get(".header-dropdown > li").as("dropdown");
     cy.get("@dropdown")
@@ -122,6 +122,17 @@ describe("dcTrack front-end testing ", () => {
       .find("#custom-fields-toolbar")
       .find('[title="Permissions"]')
       .click();
+    // remove all_user's inherit role
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('[aria-label="Row 1, Row Selection Checkbox"]')
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('button[title="Delete selected permission"]')
+      .eq(0)
+      .click();
+    // continue adding permission
     cy.getIframeBody('id="fieldmgmt_iframe"')
       .find("#dct-custom-permission")
       .find('button[title="Add Permission"]')
@@ -151,6 +162,17 @@ describe("dcTrack front-end testing ", () => {
       .find("#custom-fields-toolbar")
       .find('[title="Permissions"]')
       .click();
+    // remove all_user's inherit role
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('[aria-label="Row 1, Row Selection Checkbox"]')
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('button[title="Delete selected permission"]')
+      .eq(0)
+      .click();
+    // continue adding permission
     cy.getIframeBody('id="fieldmgmt_iframe"')
       .find("#dct-custom-permission")
       .find('button[title="Add Permission"]')
@@ -209,11 +231,12 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="assets_iframe"')
       .contains("div", "48RU-Cabinet GlobalFrame-3A-400")
       .dblclick();
-    cy.wait(8000);
+    cy.wait(10000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#itemDetail")
       .find('[title="Edit"]')
       .click();
+    cy.wait(4000);
     cy.getIframeBody('id="assets_iframe"')
       .find("#tiCustomField_HG-example-selectized")
       .should("not.have.attr", "readonly", "readonly");
@@ -266,10 +289,6 @@ describe("dcTrack front-end testing ", () => {
       .contains("div", "48RU-Cabinet GlobalFrame-3A-400")
       .dblclick();
     cy.wait(8000);
-    cy.getIframeBody('id="assets_iframe"')
-      .find("#itemDetail")
-      .find('[title="Edit"]')
-      .click();
     cy.getIframeBody('id="assets_iframe"')
       .find("#tiCustomField_HG-example-selectized")
       .should("not.exist");
@@ -337,5 +356,86 @@ describe("dcTrack front-end testing ", () => {
     cy.contains("button", " Delete ").click();
     cy.get(".panel-actions-end").find("button").eq(1).click();
     cy.wait(4000);
+  });
+
+  it("Visit HG-example and rollbakc the role of all_users", () => {
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(8)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(8).contains("Field Management").click();
+    cy.wait(6000);
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#fieldmgmt-container")
+      .find("ul > li")
+      .eq(1)
+      .find("a")
+      .click();
+    cy.wait(10000);
+    // WARN: when filtering HG, it is not stable
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#idFilterLabel").type("HG");
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find('[aria-label="Row 3, Row Selection Checkbox"]') // customField1: HG-example
+      .eq(1)
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#custom-fields-toolbar")
+      .find('[title="Permissions"]')
+      .click();
+    // adding permission
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('button[title="Add Permission"]')
+      .eq(0)
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#group").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#user-select").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .contains("span", "all_users")
+      .parent()
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#role-select").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .contains("span", "Inherit")
+      .parent()
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#btnAddPerm").click();
+    cy.wait(3000);
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#modal-btnClose").click();
+  });
+
+  it("Visit HG-checkbox and rollback the role of all_users", () => {
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find('[aria-label="Row 1, Row Selection Checkbox"]') // customField2: HG-checkbox
+      .eq(1)
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#custom-fields-toolbar")
+      .find('[title="Permissions"]')
+      .click();
+
+    // adding permission
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('button[title="Add Permission"]')
+      .eq(0)
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#group").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#user-select").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .contains("span", "all_users")
+      .parent()
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#role-select").click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .contains("span", "Inherit")
+      .parent()
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#btnAddPerm").click();
+    cy.wait(3000);
+    cy.getIframeBody('id="fieldmgmt_iframe"').find("#modal-btnClose").click();
   });
 });

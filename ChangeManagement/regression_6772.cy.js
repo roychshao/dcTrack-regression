@@ -16,7 +16,7 @@ Cypress.Commands.add('getIframeBody', (attribute) => {
     })
 
     it('Visit page', () => {
-      cy.visit('192.168.56.105')
+      cy.visit('Cypress.config('url')')
     })
     it('log in', () => {
       cy.on('fail', (err, runnable) => {

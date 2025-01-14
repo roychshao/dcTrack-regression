@@ -20,7 +20,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit page", () => {
-    cy.visit("192.168.56.105");
+    cy.visit(Cypress.config('url'));
   });
 
   it("log in", () => {

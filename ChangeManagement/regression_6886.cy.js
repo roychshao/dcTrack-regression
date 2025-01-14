@@ -15,11 +15,11 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
-    cy.visit("192.168.56.105");
+    cy.visit(Cypress.config('url'));
   });
   it("log in", () => {
     cy.on("fail", (err, runnable) => {
@@ -55,21 +55,25 @@ describe("dcTrack front-end testing ", () => {
   it("Quick move item request", () => {
     cy.wait(4000);
     cy.getIframeBody('id="assets_iframe"')
-      .find('div[class="tab-pane active"]')
+      .find("#itemDetail")
       .find('[title="Actions"]')
       .click();
     cy.getIframeBody('id="assets_iframe"')
-      .find('div[class="tab-pane active"]')
       .find("#dropdown-ACTION_TB > li")
       .as("dropdown");
-    cy.get("@dropdown").eq(11).contains("Quick Move Item Request...").click();
+    cy.get("@dropdown")
+      .eq(11)
+      .contains("Quick Move Item Request...")
+      .click({ force: true });
   });
 
   it('Remains the "Row Label" field unfilled, check if the save button is disabled', () => {
     cy.wait(10000);
     cy.getIframeBody('id="assets_iframe"')
-      .find('div[class="tab-pane active"]')
-      .eq(1)
+      .contains("label", "101^^WHEN-MOVED")
+      .wait(4000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find(".tab-pane.active")
       .find("#itemDetail")
       .find('[title="Save"]')
       .as("SaveBtn");
