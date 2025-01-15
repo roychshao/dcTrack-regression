@@ -129,7 +129,7 @@ describe("dcTrack front-end testing ", () => {
     cy.get("#back-to-list-btn").click();
   });
 
-  it("Setting Permissions: CustomField1, user1 has operator, user2 has viewer role", () => {
+  it("Setting Permissions: CustomField1, user1 has operator, user2 has viewer role and remove the all_user inherit role", () => {
     cy.get(".menu-toggle").click();
     cy.get(".header-dropdown > li").as("dropdown");
     cy.get("@dropdown")
@@ -156,6 +156,16 @@ describe("dcTrack front-end testing ", () => {
       .find("#custom-fields-toolbar")
       .find('[title="Permissions"]')
       .click();
+    // remove the inherit all_user permission
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('[aria-label="Row 1, Row Selection Checkbox"]')
+      .click();
+    cy.getIframeBody('id="fieldmgmt_iframe"')
+      .find("#dct-custom-permission")
+      .find('[title="Delete selected permission"]')
+      .click();
+    // continue
     cy.getIframeBody('id="fieldmgmt_iframe"')
       .find("#dct-custom-permission")
       .find('button[title="Add Permission"]')

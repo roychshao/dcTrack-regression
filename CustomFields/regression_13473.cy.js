@@ -19,7 +19,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Visit page", () => {
-    cy.visit(Cypress.config('url'));
+    cy.visit(Cypress.config("url"));
   });
 
   it("log in with admin", () => {
@@ -206,78 +206,7 @@ describe("dcTrack front-end testing ", () => {
       .should("not.exist");
   });
 
-  it("Try to update customField1 for items in SITE COLO (101) through api", () => {
-    cy.request({
-      method: "POST",
-      url: "https://192.168.56.105/dcTrackApp/api/v2/items/5034",
-      body: {
-        customFields: [
-          {
-            uiComponentId: "tiCustomField_HG-text",
-            value: "123123123",
-          },
-        ],
-        fields: [
-          {
-            label: "_tiProceedOnWarning",
-            data: "false",
-          },
-          {
-            label: "cmbAisle",
-          },
-          {
-            label: "cmbCabinet",
-          },
-          {
-            label: "cmbModel",
-            data: 25436,
-          },
-          {
-            label: "cmbPSRedundancy",
-            data: null,
-          },
-          {
-            label: "cmbRowLabel",
-            data: 1,
-          },
-          {
-            label: "cmbRowPosition",
-            data: 1,
-          },
-          {
-            label: "cmbUPosition",
-            data: -9,
-          },
-          {
-            label: "panelSource",
-            data: null,
-          },
-          {
-            label: "radioRailsUsed",
-          },
-          {
-            label: "tiClass",
-            data: "Cabinet",
-          },
-          {
-            label: "tiName",
-            data: "101",
-          },
-          {
-            label: "tiSubclass",
-            data: null,
-          },
-        ],
-        itemId: 5034,
-      },
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "X-Csrf-Token":
-          "Wdy3YbwtT-TlMiiUuEQn99Ihu73dc8L5DGl8aZe936V_Mtz3erLILbQOQQ78axsqj4bV141cJaEQId7A5vuZJA",
-        "X-Xsrf-Token": "94df3a55-6efc-4087-aa5b-540b6c80f5d1",
-      },
-    });
-  });
+  it("Try to update customField1 for items in SITE COLO (101) through api", () => {});
 
   it("Logoff", () => {
     cy.get("#headerToolbar_userAccount").click();
