@@ -16,7 +16,7 @@
 //     })
 //
 //     it('Visit page', () => {
-//       cy.visit('Cypress.config('url')')
+//       cy.visit(Cypress.config('url'))
 //     })
 //     it('log in', () => {
 //       cy.on('fail', (err, runnable) => {
@@ -36,7 +36,7 @@
 //       cy.get('@dropdown').eq(3).find('sun-icon.fa.fa-chevron-right').should('exist').click()
 //       cy.get('@dropdown').eq(3).contains('Items').click()
 //     })
-//     
+//
 //     it('Decommission to archive for BLK and C', () => {
 //       cy.wait(4000)
 //       // filtering
@@ -79,7 +79,7 @@
 //             cy.getIframeBody('id="change_iframe"').find('.ui-grid-canvas > div').eq(1).find('[title="Request Complete"]')
 //           })
 //         })
-//       }) 
+//       })
 //     })
 //   })
 //

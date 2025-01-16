@@ -1,86 +1,117 @@
-Cypress.Commands.add('getIframeBody', (attribute) => {
-    // get the iframe > document > body
-    // and retry until the body element is not empty
-    return cy
-    .get('iframe[' + attribute + ']')
-    .its('0.contentDocument.body').should('not.be.empty')
-    // wraps "body" DOM element to allow
-    // chaining more Cypress commands, like ".find(...)"
-    // https://on.cypress.io/wrap
-    .then(cy.wrap)
-  })
+Cypress.Commands.add("getIframeBody", (attribute) => {
+  // get the iframe > document > body
+  // and retry until the body element is not empty
+  return (
+    cy
+      .get("iframe[" + attribute + "]")
+      .its("0.contentDocument.body")
+      .should("not.be.empty")
+      // wraps "body" DOM element to allow
+      // chaining more Cypress commands, like ".find(...)"
+      // https://on.cypress.io/wrap
+      .then(cy.wrap)
+  );
+});
 
-  describe('dcTrack front-end testing ', () => {
-    beforeEach(() => {
-      Cypress.config('defaultCommandTimeout', 10000);
-    })
+describe("dcTrack front-end testing ", () => {
+  beforeEach(() => {
+    Cypress.config("defaultCommandTimeout", 10000);
+  });
 
-    it('Visit page', () => {
-      cy.visit('Cypress.config('url')')
-    })
+  it("Visit page", () => {
+    cy.visit(Cypress.config("url"));
+  });
 
-    it('log in', () => {
-      cy.on('fail', (err, runnable) => {
-        cy.log('already log in')
-        return false
-      })
+  it("log in", () => {
+    cy.on("fail", (err, runnable) => {
+      cy.log("already log in");
+      return false;
+    });
 
-      cy.get('.login').type('admin')
-      cy.get('.password').type('sunbird')
-      cy.contains('Log in').click()
-    })
+    cy.get(".login").type("admin");
+    cy.get(".password").type("sunbird");
+    cy.contains("Log in").click();
+  });
 
-    it('Visit Assets Page', () => {
-      cy.wait(8000)
-      cy.get('.menu-toggle').click()
-      cy.get('.header-dropdown > li').as('dropdown')
-      cy.get('@dropdown').eq(3).find('sun-icon.fa.fa-chevron-right').should('exist').click()
-      cy.get('@dropdown').eq(3).contains('Items').click()
-    })
+  it("Visit Assets Page", () => {
+    cy.wait(8000);
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(3)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(3).contains("Items").click();
+  });
 
-    it('Choose item 101', () => {
-      cy.wait(4000)
-      cy.getIframeBody('id="assets_iframe"')
-        .contains('div', '48RU-Cabinet GlobalFrame-3A-400').eq(0).dblclick()
-      cy.wait(4000)
-    })
-    
-    it('Move Item Request', () => {
-      cy.getIframeBody('id="assets_iframe"').find('div[class="tab-pane active"]').find('[title="Actions"]').click()
-      cy.getIframeBody('id="assets_iframe"').find('div[class="tab-pane active"]').find('#dropdown-ACTION_TB > li').as('dropdown')
-      cy.get('@dropdown').eq(11).contains('Quick Move Item Request...').click()
-    })
+  it("Choose item 101", () => {
+    cy.wait(4000);
+    cy.getIframeBody('id="assets_iframe"')
+      .contains("div", "48RU-Cabinet GlobalFrame-3A-400")
+      .eq(0)
+      .dblclick();
+    cy.wait(4000);
+  });
 
-    it('Confirm the request', () => {
-      cy.getIframeBody('id="assets_iframe"').find('div[class="tab-pane active"]').find('[title="Save"]').click()
-      cy.getIframeBody('id="assets_iframe"').find('#modal-btnOk').click()
-      cy.wait(4000)
-      cy.getIframeBody('id="assets_iframe"').find('#modal-btnCancel').click()
-    })
+  it("Move Item Request", () => {
+    cy.getIframeBody('id="assets_iframe"')
+      .find('div[class="tab-pane active"]')
+      .find('[title="Actions"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"')
+      .find('div[class="tab-pane active"]')
+      .find("#dropdown-ACTION_TB > li")
+      .as("dropdown");
+    cy.get("@dropdown").eq(11).contains("Quick Move Item Request...").click();
+  });
 
-    it('Verify if it is the request just generated', () => {
-      cy.wait(4000)
-      cy.getIframeBody('id="assets_iframe"').find('#tiRequestInfo').should(($ri) => {
+  it("Confirm the request", () => {
+    cy.getIframeBody('id="assets_iframe"')
+      .find('div[class="tab-pane active"]')
+      .find('[title="Save"]')
+      .click();
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnOk").click();
+    cy.wait(4000);
+    cy.getIframeBody('id="assets_iframe"').find("#modal-btnCancel").click();
+  });
+
+  it("Verify if it is the request just generated", () => {
+    cy.wait(4000);
+    cy.getIframeBody('id="assets_iframe"')
+      .find("#tiRequestInfo")
+      .should(($ri) => {
         const value = $ri.val();
         expect(value).to.include("Request Issued");
-      })
-    })
+      });
+  });
 
-    it('Visit Change Page', () => {
-      cy.get('.menu-toggle').click()
-      cy.get('.header-dropdown > li').as('dropdown')
-      cy.get('@dropdown').eq(5).find('sun-icon.fa.fa-chevron-right').should('exist').click()
-      cy.get('@dropdown').eq(5).contains('Requests').click()
-    })
+  it("Visit Change Page", () => {
+    cy.get(".menu-toggle").click();
+    cy.get(".header-dropdown > li").as("dropdown");
+    cy.get("@dropdown")
+      .eq(5)
+      .find("sun-icon.fa.fa-chevron-right")
+      .should("exist")
+      .click();
+    cy.get("@dropdown").eq(5).contains("Requests").click();
+  });
 
-    it('Choose the first (latest) request', () => {
-      cy.getIframeBody('id="change_iframe"').find('.ui-grid-canvas > div').eq(0).dblclick()
-    })
-    
-    it('Cancel request', () => {
-      cy.getIframeBody('id="change_iframe"').find('div[class="tab-pane active"]').eq(0).find('[title="Actions for this request."]').click()
-      cy.getIframeBody('id="change_iframe"').find('#menuCancelRequest').click()
-      cy.wait(4000)
-      cy.getIframeBody('id="change_iframe"').find('#modal-btnCancel').click()
-    })
-  })
+  it("Choose the first (latest) request", () => {
+    cy.getIframeBody('id="change_iframe"')
+      .find(".ui-grid-canvas > div")
+      .eq(0)
+      .dblclick();
+  });
+
+  it("Cancel request", () => {
+    cy.getIframeBody('id="change_iframe"')
+      .find('div[class="tab-pane active"]')
+      .eq(0)
+      .find('[title="Actions for this request."]')
+      .click();
+    cy.getIframeBody('id="change_iframe"').find("#menuCancelRequest").click();
+    cy.wait(4000);
+    cy.getIframeBody('id="change_iframe"').find("#modal-btnCancel").click();
+  });
+});

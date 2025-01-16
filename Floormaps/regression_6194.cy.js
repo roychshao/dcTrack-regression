@@ -15,7 +15,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
@@ -33,42 +33,35 @@ describe("dcTrack front-end testing ", () => {
     cy.contains("Log in").click();
   });
 
-  it("Visit Models Library Page", () => {
-    cy.wait(12000);
+  it("Visit Visualization Page", () => {
+    cy.wait(8000);
     cy.get(".menu-toggle").click();
     cy.get(".header-dropdown > li").as("dropdown");
     cy.get("@dropdown")
-      .eq(8)
+      .eq(1)
       .find("sun-icon.fa.fa-chevron-right")
       .should("exist")
       .click();
-    cy.get("@dropdown").eq(8).contains("Models Library").click();
+    cy.get("@dropdown").eq(1).contains(" Floor Maps ").click();
   });
 
-  it("Select 00YJ783 and create/verify an outlet", () => {
+  it("Verify canvas displayed and zoomin", () => {
     cy.wait(8000);
-    cy.getIframeBody('id="models_iframe"')
-      .contains("div", "00YJ783")
-      .dblclick();
-    cy.wait(8000);
-    cy.getIframeBody('id="models_iframe"')
-      .find("#modeldetail")
-      .find('[title="Edit"]')
+    cy.getIframeBody('id="floormap_iframe"')
+      .contains("div", "1A-01RU-SH-U19-FB")
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .find('[title="1A"]')
       .click();
-    cy.getIframeBody('id="models_iframe"').find("#subtab-PowerPorts").click();
     cy.wait(2000);
-    cy.getIframeBody('id="models_iframe"').find("#toolBarBtnNew").click();
-    cy.getIframeBody('id="models_iframe"')
-      .find("#selectedPortType-selectized")
-      .click()
-      .type("Outlet{enter}");
-    cy.wait(1000);
-    cy.getIframeBody('id="models_iframe"')
-      .find("#selectedVolts-selectized")
-      .click();
-    cy.getIframeBody('id="models_iframe"')
-      .find(".selectize-dropdown-content.selectize-dropdown-selectedVolts")
-      .find("div")
-      .should("have.length", 1); // have only one option to select
+  });
+
+  it("Take a snapshot and compare", () => {
+    cy.wait(6000);
+    cy.getIframeBody('id="floormap_iframe"')
+      .find("#container3D")
+      .compareSnapshot({ name: "cabinet", testThreshold: 0.05 });
   });
 });
