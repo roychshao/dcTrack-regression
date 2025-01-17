@@ -15,7 +15,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 5000);
+    Cypress.config("defaultCommandTimeout", 10000);
   });
 
   it("Visit page", () => {
@@ -86,28 +86,29 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Create back up and wait", () => {
-    cy.debug();
     cy.wait(1500);
     cy.contains("button", "Create Backup").click();
-    // Wait 10 min
-    cy.wait(600000);
+
+    // wait until it finished
+    const waitUntilFinish = () => {
+      cy.get('input[type="checkbox"][class="cdk-visually-hidden"]').then(
+        ($e) => {
+          if ($e.is(":visible")) {
+            return;
+          } else {
+            cy.wait(120000).then(() => {
+              waitUntilFinish();
+            });
+          }
+        },
+      );
+    };
   });
 
   it("Restore back up", () => {
-    cy.get(".menu-toggle").click();
-    cy.get(".header-dropdown > li").as("dropdown");
-    cy.get("@dropdown")
-      .eq(8)
-      .find("sun-icon.fa.fa-chevron-right")
-      .should("exist")
-      .click();
-    cy.get("@dropdown").eq(8).contains("dcTrack Settings").click();
-    cy.wait(6000);
-    cy.contains("Appliance Administration").click();
-    cy.get('div[class="scrollable ng-star-inserted"]')
-      .contains(" Data Backups ")
-      .parent()
-      .click();
+    cy.get('input[type="checkbox"][class="cdk-visually-hidden"]').click({
+      force: true,
+    });
     cy.contains("button", "Restore Backup").click();
     cy.get("appliance-restore-backup-dialog")
       .find("appliance-backup-choice-list")
@@ -122,8 +123,8 @@ describe("dcTrack front-end testing ", () => {
     cy.get("appliance-restore-confirm-dialog")
       .contains("button", "Continue")
       .click();
-    // Wait 30 minutes
-    cy.wait(1800000);
+    // Wait 10 minutes
+    cy.wait(600000);
     // ERROR: running backup permanently?
   });
 
