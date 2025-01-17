@@ -106,6 +106,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Take a snapshot and compare", () => {
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "cabinet", testThreshold: 0.05 });
@@ -141,7 +142,7 @@ describe("dcTrack front-end testing ", () => {
         const canvas = $canvas[0];
         cy.wrap(canvas).realMouseMove(-100, 44, { position: "center" });
       });
-    cy.wait(1000);
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "isolated", testThreshold: 0.05 });
@@ -153,7 +154,7 @@ describe("dcTrack front-end testing ", () => {
       .find('[title="Select up to 5 reports to correlate their data"]')
       .click();
     cy.getIframeBody('id="floormap_iframe"').find("#option-0").click();
-    cy.wait(4000);
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "report", testThreshold: 0.05 });

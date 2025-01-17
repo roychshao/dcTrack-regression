@@ -115,7 +115,7 @@ describe("dcTrack front-end testing ", () => {
     cy.getIframeBody('id="floormap_iframe"')
       .contains("div", "1B-RPDU-R")
       .click();
-    cy.wait(4000);
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "item-inside", testThreshold: 0.05 });
@@ -154,7 +154,7 @@ describe("dcTrack front-end testing ", () => {
         cy.wrap(canvas).realMouseDown();
         cy.wrap(canvas).realMouseUp();
       });
-    cy.wait(1000);
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "isolated", testThreshold: 0.05 });
@@ -166,7 +166,7 @@ describe("dcTrack front-end testing ", () => {
       .find('[title="Select up to 5 reports to correlate their data"]')
       .click();
     cy.getIframeBody('id="floormap_iframe"').find("#option-0").click();
-    cy.wait(4000);
+    cy.wait(6000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "report", testThreshold: 0.05 });
