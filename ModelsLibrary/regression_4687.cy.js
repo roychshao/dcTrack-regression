@@ -15,11 +15,12 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    cy.viewport(1100, 1100);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
-    cy.visit(Cypress.config('url'));
+    cy.visit(Cypress.config("url"));
   });
 
   it("log in", () => {

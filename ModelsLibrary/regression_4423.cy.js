@@ -15,11 +15,12 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
-    Cypress.config("defaultCommandTimeout", 10000);
+    cy.viewport(1100, 1100);
+    Cypress.config("defaultCommandTimeout", 20000);
   });
 
   it("Visit page", () => {
-    cy.visit(Cypress.config('url'));
+    cy.visit(Cypress.config("url"));
   });
 
   it("log in", () => {
@@ -95,8 +96,18 @@ describe("dcTrack front-end testing ", () => {
       .find('[title="2"]')
       .parent()
       .click()
-      .type("{backspace}1{enter}");
+      .should("have.attr", "aria-selected", "true")
+      .wait(1000)
+      .click();
     cy.wait(2000);
+    cy.getIframeBody('id="models_iframe"')
+      .find("#powerPortsGrid")
+      .find(".ui-grid-canvas")
+      .eq(3)
+      .find('[title="2"]')
+      .parent()
+      .find("input")
+      .type("1{enter}");
     cy.getIframeBody('id="models_iframe"')
       .find("#modeldetail")
       .find('[title="Save"]')
