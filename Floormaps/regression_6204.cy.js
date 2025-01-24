@@ -15,6 +15,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
+    cy.viewport(1100, 1100);
     Cypress.config("defaultCommandTimeout", 20000);
   });
 
@@ -88,6 +89,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Take a snapshot and compare", () => {
+    cy.wait(4000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "drawing", testThreshold: 0.05 });
@@ -116,6 +118,7 @@ describe("dcTrack front-end testing ", () => {
   });
 
   it("Take a snapshot and compare", () => {
+    cy.wait(4000);
     cy.getIframeBody('id="floormap_iframe"')
       .find("#container3D")
       .compareSnapshot({ name: "itemlist", testThreshold: 0.05 });

@@ -15,6 +15,7 @@ Cypress.Commands.add("getIframeBody", (attribute) => {
 
 describe("dcTrack front-end testing ", () => {
   beforeEach(() => {
+    cy.viewport(1100, 1100);
     Cypress.config("defaultCommandTimeout", 20000);
   });
 
